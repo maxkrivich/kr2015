@@ -116,7 +116,7 @@ public class View extends JFrame {
 
 	public double getSum() {
 		String s = sum.getText().replaceAll(",", ".");
-		if (!s.isEmpty() && s.matches("[+-]?\\d*(\\.\\d+)?"))
+		if (!s.isEmpty() && s.matches("[+]?\\d*(\\.\\d+)?"))
 			return Double.parseDouble(s);
 		else {
 			this.printError("Wrong sum, please try again!\n");
