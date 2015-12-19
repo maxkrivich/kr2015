@@ -1,0 +1,1 @@
+[{"sale":"25.18892","base_ccy":"UAH","buy":"23.20000","ccy":"USD"},{"sale":"27.32240","base_ccy":"UAH","buy":"25.10000","ccy":"EUR"},{"sale":"0.36001","base_ccy":"UAH","buy":"0.34000","ccy":"RUR"},{"sale":"486.9711","base_ccy":"USD","buy":"440.5929","ccy":"BTC"}]
