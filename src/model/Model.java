@@ -1,16 +1,25 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Model {
-	private Bank[] banks = new Bank[] { new PrivatBank() }; // Banks array
-	private int pt = 0; // what bank use now
+	// private Bank[] banks = new Bank[] { new PrivatBank() }; // Banks array
+	private Map<String, Bank> banks = new HashMap<String, Bank>() {
+		{
+			put("PrivatBank", new PrivatBank());
+			put("NBU", new NBU());
+		}
+	};
+	private String bankUsed = getBanksName()[0]; // what bank use now
 	private final String PATTERN = "%.3f";
 
 	public Bank getBank() {
-		return banks[pt];
+		return banks.get(bankUsed);
 	}
 
-	public void setPt(int pt) {
-		this.pt = pt;
+	public void setBank(String name) {
+		this.bankUsed = name;
 	}
 
 	public String getLastUpdate() {
@@ -18,24 +27,22 @@ public class Model {
 	}
 
 	public double getCalculation(double cnts, String from, String to) {
-		Cost c1 = banks[pt].getCost(from), c2 = banks[pt].getCost(to);
-		if (banks[pt].getBaseCcy().equals(from) && !banks[pt].getBaseCcy().equals(to)) {
+		Bank b = getBank();
+		Cost c1 = b.getCost(from), c2 = b.getCost(to);
+		if (b.getBaseCcy().equals(from) && !b.getBaseCcy().equals(to)) {
 			return Math.floor((cnts / c2.getSale()) * 100) / 100;
-		} else if (banks[pt].getBaseCcy().equals(from) && banks[pt].getBaseCcy().equals(to)) {
+		} else if (b.getBaseCcy().equals(from) && b.getBaseCcy().equals(to)) {
 			return cnts;
-		} else if (banks[pt].getBaseCcy().equals(to)) {
+		} else if (b.getBaseCcy().equals(to)) {
 			return Math.floor((cnts * c1.getBuy()) * 100) / 100;
-		} else if (!banks[pt].getBaseCcy().equals(from) && !banks[pt].getBaseCcy().equals(to)) {
+		} else if (!b.getBaseCcy().equals(from) && !b.getBaseCcy().equals(to)) {
 			return Math.floor(((cnts * c1.getBuy()) / c2.getSale()) * 100) / 100;
 		}
 		return Double.NEGATIVE_INFINITY;
 	}
 
 	public String[] getBanksName() {
-		String[] arr = new String[banks.length];
-		for (int i = 0; i < arr.length; i++)
-			arr[i] = banks[i].getBankName();
-		return arr;
+		return banks.keySet().toArray(new String[0]);
 	}
 
 	public String[] getCurrencyAtBank() {
@@ -47,14 +54,18 @@ public class Model {
 		StringBuffer ans = new StringBuffer();
 		ans.append(getLastUpdate());
 		for (int i = 0; i < s.length - 1; i++)
-			ans.append(s[i] + "  " + getBank().getCost(s[i]).toString() + '\n');
+			ans.append(String.format("%s  %s\n", s[i], getBank().getCost(s[i]).toString()));
 		return ans.toString();
 	}
 
-	// public static void main(String[] args) {
-	// CurrencyModel cu = new CurrencyModel();
-	// double s = cu.getCalculation(1, "USD", "RUR");
-	// System.out.println(Arrays.toString(cu.getCurrencyAtBank()));
-	// System.out.println(s);
-	// }
+	public void updateInBank() {
+		getBank().update();
+	}
+
+	/*
+	 * public static void main(String[] args) { CurrencyModel cu = new
+	 * CurrencyModel(); double s = cu.getCalculation(1, "USD", "RUR");
+	 * System.out.println(Arrays.toString(cu.getCurrencyAtBank()));
+	 * System.out.println(s); }
+	 */
 }

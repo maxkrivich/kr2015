@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import model.Model;
 import view.View;
@@ -18,7 +20,9 @@ public class Controller {
 		view = v;
 		model = m;
 		this.view.addListenerForExchange(new CalculationListener());
-		this.view.addListenerFrame(new Dialog());
+		this.view.addListenerCourse(new Dialog());
+		this.view.addListenerList(new SelectionListenner());
+		this.view.addListenerForUpdate(new UpdateLis());
 
 	}
 
@@ -33,31 +37,41 @@ public class Controller {
 			view.appendSolution(sum, ans, from, to);
 		}
 	}
-	
-	public class Dialog implements KeyListener{
+
+	public class UpdateLis implements ActionListener {
 
 		@Override
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-			
+		public void actionPerformed(ActionEvent e) {
+			if (view.getInetStatus()) {
+				model.updateInBank();
+				view.print("Last update: " + model.getLastUpdate());
+			} else
+				view.print("You offline");
+
 		}
 
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if(e.getKeyCode() == KeyEvent.VK_F1){
-				JOptionPane.showMessageDialog (null, model.getCourses(), "Courses", JOptionPane.PLAIN_MESSAGE);
-			}
-			
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
 	}
-	
+
+	public class Dialog implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(null, model.getCourses(), "Courses", JOptionPane.PLAIN_MESSAGE);
+		}
+
+	}
+
+	public class SelectionListenner implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			if (!e.getValueIsAdjusting()) {
+				model.setBank((String) view.getList().getSelectedValue());
+				view.print("Last update: " + model.getLastUpdate());
+				// System.out.println(view.getList().getSelectedValue());
+			}
+
+		}
+	}
 
 }
