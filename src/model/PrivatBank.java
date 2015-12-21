@@ -22,7 +22,7 @@ public class PrivatBank extends Bank {
 
 	public PrivatBank() {
 		bankName = "PrivatBank";
-		apiLink = "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11";
+		apiLink = "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=5";
 		baseCcy = "UAH";
 		update();
 	}

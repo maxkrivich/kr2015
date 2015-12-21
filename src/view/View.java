@@ -137,7 +137,7 @@ public class View extends JFrame {
 		contentPane.add(panel_3, BorderLayout.SOUTH);
 
 		setVisible(true);
-		setFocusable(true);
+		//setFocusable(true);
 
 		setLocationRelativeTo(null);
 	}
