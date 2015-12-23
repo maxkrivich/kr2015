@@ -8,8 +8,8 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,7 +37,23 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.RegularTimePeriod;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+
+import model.Cost;
 import model.Model;
+import model.PrivatBank;
 
 public class View extends JFrame {
 
@@ -117,7 +133,6 @@ public class View extends JFrame {
 		panel_1.add(course);
 		panel_1.add(update);
 		contentPane.add(panel_1, BorderLayout.WEST);
-		
 
 		this.print("Last update: " + model.getLastUpdate());
 
@@ -137,7 +152,7 @@ public class View extends JFrame {
 		contentPane.add(panel_3, BorderLayout.SOUTH);
 
 		setVisible(true);
-		//setFocusable(true);
+		// setFocusable(true);
 
 		setLocationRelativeTo(null);
 	}
@@ -205,6 +220,16 @@ public class View extends JFrame {
 		}
 	}
 
+	public static void main(final String[] args) throws FileNotFoundException, ClassNotFoundException, IOException {
+		PrivatBank pb = new PrivatBank();
+		Cost arr[] = pb.readStat("statpb2014EUR.txt");
+		final Chart demo = new Chart("Chart", arr);
+		demo.pack();
+		RefineryUtilities.centerFrameOnScreen(demo);
+		demo.setVisible(true);
+
+	}
+
 }
 
 class ClockPane extends JPanel {
@@ -234,4 +259,71 @@ class ClockPane extends JPanel {
 	public void tickTock() {
 		clock.setText(DateFormat.getDateTimeInstance().format(new Date()));
 	}
+}
+
+class Chart extends ApplicationFrame {
+	private XYPlot plot;
+	private Cost[] arr;
+
+	public Chart(String title, Cost[] arr) {
+		super(title);
+		this.arr = arr;
+		final TimeSeriesCollection dataset1 = createBuyDataset("Buy");
+		final TimeSeriesCollection dataset2 = createSaleDataset("Sale");
+		final JFreeChart chart = ChartFactory.createTimeSeriesChart("Stat", "Time", "Currency", dataset1, true, true,
+				false);
+		chart.setBackgroundPaint(Color.white);
+		this.plot = chart.getXYPlot();
+		this.plot = chart.getXYPlot();
+		this.plot.setBackgroundPaint(Color.lightGray);
+		this.plot.setDomainGridlinePaint(Color.white);
+		this.plot.setRangeGridlinePaint(Color.white);
+		final ValueAxis axis = this.plot.getDomainAxis();
+		axis.setAutoRange(true);
+
+		final NumberAxis rangeAxis2 = new NumberAxis("Range Axis 2");
+		rangeAxis2.setAutoRangeIncludesZero(false);
+
+		final JPanel content = new JPanel(new BorderLayout());
+
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		content.add(chartPanel);
+
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		setContentPane(content);
+
+		this.plot.setDataset(1, dataset2);
+		this.plot.setRenderer(1, new StandardXYItemRenderer());
+
+	}
+
+	private TimeSeriesCollection createBuyDataset(final String name) {
+		final TimeSeries series = new TimeSeries(name);
+		RegularTimePeriod t = new Day(01, 01,2014);
+		for (int i = 0; i < arr.length; i++) {
+			try{
+			series.add(t, arr[i].getBuy());
+			}
+			catch(NullPointerException npe){
+				series.add(t, arr[i-1].getBuy());
+			}
+			t = t.next();
+		}
+		return new TimeSeriesCollection(series);
+	}
+
+	private TimeSeriesCollection createSaleDataset(final String name) {
+		final TimeSeries series = new TimeSeries(name);
+		RegularTimePeriod t = new Day(01, 01, 2014);
+		for (int i = 0; i < arr.length; i++) {
+			try{
+			series.add(t, arr[i].getSale());
+			}catch(NullPointerException npe){
+				series.add(t, arr[i-1].getBuy());
+			}
+			t = t.next();
+		}
+		return new TimeSeriesCollection(series);
+	}
+
 }

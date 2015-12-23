@@ -7,8 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,7 +26,9 @@ public class PrivatBank extends Bank {
 	public PrivatBank() {
 		bankName = "PrivatBank";
 		apiLink = "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=5";
+		arApiLink = "https://api.privatbank.ua/p24api/exchange_rates?json&date=";
 		baseCcy = "UAH";
+		statStatus = true;
 		update();
 	}
 
@@ -52,8 +57,6 @@ public class PrivatBank extends Bank {
 				ccy.put((String) info.get("ccy"), new Cost(Double.parseDouble((String) info.get("buy")),
 						Double.parseDouble((String) info.get("sale"))));
 			}
-			// ccy.put("USD", new Cost(24.1, 25.1));
-			// ccy.put("EUR", new Cost(26.3, 27.3));
 			updateTime = new Date();
 		} catch (IOException e) {
 			JSONParser p = new JSONParser();
@@ -72,14 +75,53 @@ public class PrivatBank extends Bank {
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 
 	}
 
-//	 public static void main(String[] args) {
-//	 PrivatBank pb = new PrivatBank();
-//	 //System.out.println(Arrays.toString(pb.getCurrency()));
-//	 }
+	@Override
+	public Cost[] getStat(String ex) throws MalformedURLException, IOException {
+		String dates[] = sd.getYear();
+		Cost ans[] = new Cost[dates.length];
+		long a = System.currentTimeMillis();
+		for (int i = 0; i < dates.length; i++) {
+			URLConnection con = new URL(arApiLink + dates[i]).openConnection();
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			StringBuffer sb = new StringBuffer();
+			int c;
+			while ((c = br.read()) != -1)
+				sb.append((char) c);
+			JSONParser p = new JSONParser();
+			Object obj = JSONValue.parse(sb.toString());
+			JSONObject o = (JSONObject) obj;
+			JSONArray arr = (JSONArray) o.get("exchangeRate");
+			Iterator iter = arr.iterator();
+			while (iter.hasNext()) {
+				JSONObject info = (JSONObject) iter.next();
+				if (ex.equals((String) info.get("currency"))) {
+					try {
+						ans[i] = new Cost((double) info.get("purchaseRate"), (double) info.get("saleRate"));
+					} catch (NullPointerException npe) {
+						continue;
+					}
+					System.out.printf("%d %s\n", i, ans[i]);
+					break;
+				}
+			}
+
+		}
+
+		long b = System.currentTimeMillis();
+		System.out.println(b - a);
+		return ans;
+	}
+
+	public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
+		PrivatBank pb = new PrivatBank();
+		Cost arr[] = pb.readStat("statpb2014EUR.txt");
+		//pb.writeArray(pb.getStat("USD"),"statpb2014USD.txt");
+		System.out.println(arr[11]);
+	}
 
 }

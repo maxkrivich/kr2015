@@ -5,12 +5,10 @@ import java.util.Map;
 
 public class Model {
 	// private Bank[] banks = new Bank[] { new PrivatBank() }; // Banks array
-	private Map<String, Bank> banks = new HashMap<String, Bank>() {
-		{
-			put("PrivatBank", new PrivatBank());
+	private Map<String, Bank> banks = new HashMap<String, Bank>() {{
 			put("NBU", new NBU());
-		}
-	};
+			put("PrivatBank", new PrivatBank());
+        }};
 	private String bankUsed = getBanksName()[0]; // what bank use now
 	private final String PATTERN = "%.3f";
 

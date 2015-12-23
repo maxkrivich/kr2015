@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -75,6 +76,12 @@ public class NBU extends Bank {
 			//e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public Cost[] getStat(String ex) throws MalformedURLException, IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 //	 public static void main(String[] args) {
