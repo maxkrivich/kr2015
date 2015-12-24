@@ -1,38 +1,10 @@
 import java.awt.EventQueue;
-import java.awt.GridLayout;
-import java.awt.KeyEventDispatcher;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 
 import controller.Controller;
 import model.Model;
 import view.View;
 
-public class Application extends JFrame implements ActionListener, KeyEventDispatcher {
+public class Application {/*extends JFrame implements ActionListener, KeyEventDispatcher {
 	private JTextField s;
 	private JButton b;
 	private boolean net = this.netIsAvailable();
@@ -141,12 +113,14 @@ public class Application extends JFrame implements ActionListener, KeyEventDispa
 
 		}
 
-	}
+	}*/
 
 	public static void main(String[] args) throws ClassNotFoundException {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new Application();
+				Model m = new Model();
+				View v = new View(m);
+				Controller c = new Controller(v, m);
 			}
 		});
 	}
