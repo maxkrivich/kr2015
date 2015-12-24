@@ -117,11 +117,11 @@ public class PrivatBank extends Bank {
 		return ans;
 	}
 
-	public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
-		PrivatBank pb = new PrivatBank();
-		Cost arr[] = pb.readStat("statpb2014EUR.txt");
-		//pb.writeArray(pb.getStat("USD"),"statpb2014USD.txt");
-		System.out.println(arr[11]);
-	}
+//	public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
+//		PrivatBank pb = new PrivatBank();
+//		//Cost arr[] = pb.readStat("statpb2014EUR.txt");
+//		pb.writeArray(pb.getStat("CAD"),"statpb2014CAD.txt");
+//		//System.out.println(arr[11]);
+//	}
 
 }

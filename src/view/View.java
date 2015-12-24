@@ -66,6 +66,7 @@ public class View extends JFrame {
 	private JTextArea log;
 	private JList list;
 	private JButton update;
+	private JButton stat;
 	private boolean isOnline;
 
 	public View(Model model) {
@@ -76,7 +77,7 @@ public class View extends JFrame {
 			e.printStackTrace();
 		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(200,200, 550, 400);
 		this.setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -130,8 +131,12 @@ public class View extends JFrame {
 		update.setAlignmentX(Component.CENTER_ALIGNMENT);
 		course = new JButton("Course");
 		course.setAlignmentX(Component.CENTER_ALIGNMENT);
+		stat = new JButton("   Stat   ");
+		stat.setAlignmentX(Component.CENTER_ALIGNMENT);
+		this.setEnd(model.getBank().getStatStatus());
 		panel_1.add(course);
 		panel_1.add(update);
+		panel_1.add(stat);
 		contentPane.add(panel_1, BorderLayout.WEST);
 
 		this.print("Last update: " + model.getLastUpdate());
@@ -175,6 +180,14 @@ public class View extends JFrame {
 		log.append(s);
 	}
 
+	public void setEnd(boolean b) {
+		stat.setEnabled(b);
+	}
+	
+	public void setUpEnd(boolean b) {
+		update.setEnabled(b);
+	}
+
 	public String getFrom() {
 		return from.getSelectedItem().toString();
 	}
@@ -207,6 +220,10 @@ public class View extends JFrame {
 		this.list.addListSelectionListener(lsl);
 	}
 
+	public void addListenerForStat(ActionListener al) {
+		this.stat.addActionListener(al);
+	}
+
 	public boolean netIsAvailable() {
 		try {
 			final URL url = new URL("http://www.google.com");
@@ -220,15 +237,16 @@ public class View extends JFrame {
 		}
 	}
 
-	public static void main(final String[] args) throws FileNotFoundException, ClassNotFoundException, IOException {
-		PrivatBank pb = new PrivatBank();
-		Cost arr[] = pb.readStat("statpb2014EUR.txt");
-		final Chart demo = new Chart("Chart", arr);
-		demo.pack();
-		RefineryUtilities.centerFrameOnScreen(demo);
-		demo.setVisible(true);
-
-	}
+	// public static void main(final String[] args) throws
+	// FileNotFoundException, ClassNotFoundException, IOException {
+	// PrivatBank pb = new PrivatBank();
+	// Cost arr[] = pb.readStat("statpb2014EUR.txt");
+	// final Chart demo = new Chart("Chart", arr);
+	// demo.pack();
+	// RefineryUtilities.centerFrameOnScreen(demo);
+	// demo.setVisible(true);
+	//
+	// }
 
 }
 
@@ -259,71 +277,4 @@ class ClockPane extends JPanel {
 	public void tickTock() {
 		clock.setText(DateFormat.getDateTimeInstance().format(new Date()));
 	}
-}
-
-class Chart extends ApplicationFrame {
-	private XYPlot plot;
-	private Cost[] arr;
-
-	public Chart(String title, Cost[] arr) {
-		super(title);
-		this.arr = arr;
-		final TimeSeriesCollection dataset1 = createBuyDataset("Buy");
-		final TimeSeriesCollection dataset2 = createSaleDataset("Sale");
-		final JFreeChart chart = ChartFactory.createTimeSeriesChart("Stat", "Time", "Currency", dataset1, true, true,
-				false);
-		chart.setBackgroundPaint(Color.white);
-		this.plot = chart.getXYPlot();
-		this.plot = chart.getXYPlot();
-		this.plot.setBackgroundPaint(Color.lightGray);
-		this.plot.setDomainGridlinePaint(Color.white);
-		this.plot.setRangeGridlinePaint(Color.white);
-		final ValueAxis axis = this.plot.getDomainAxis();
-		axis.setAutoRange(true);
-
-		final NumberAxis rangeAxis2 = new NumberAxis("Range Axis 2");
-		rangeAxis2.setAutoRangeIncludesZero(false);
-
-		final JPanel content = new JPanel(new BorderLayout());
-
-		final ChartPanel chartPanel = new ChartPanel(chart);
-		content.add(chartPanel);
-
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		setContentPane(content);
-
-		this.plot.setDataset(1, dataset2);
-		this.plot.setRenderer(1, new StandardXYItemRenderer());
-
-	}
-
-	private TimeSeriesCollection createBuyDataset(final String name) {
-		final TimeSeries series = new TimeSeries(name);
-		RegularTimePeriod t = new Day(01, 01,2014);
-		for (int i = 0; i < arr.length; i++) {
-			try{
-			series.add(t, arr[i].getBuy());
-			}
-			catch(NullPointerException npe){
-				series.add(t, arr[i-1].getBuy());
-			}
-			t = t.next();
-		}
-		return new TimeSeriesCollection(series);
-	}
-
-	private TimeSeriesCollection createSaleDataset(final String name) {
-		final TimeSeries series = new TimeSeries(name);
-		RegularTimePeriod t = new Day(01, 01, 2014);
-		for (int i = 0; i < arr.length; i++) {
-			try{
-			series.add(t, arr[i].getSale());
-			}catch(NullPointerException npe){
-				series.add(t, arr[i-1].getBuy());
-			}
-			t = t.next();
-		}
-		return new TimeSeriesCollection(series);
-	}
-
 }

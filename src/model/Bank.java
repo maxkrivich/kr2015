@@ -22,6 +22,10 @@ public abstract class Bank {
 	protected ShortDate sd = new ShortDate();
 	protected boolean statStatus;
 
+	public boolean getStatStatus() {
+		return statStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "Bank [bankName=" + bankName + ", apiLink=" + apiLink + ", currency="
@@ -61,19 +65,19 @@ public abstract class Bank {
 	public void writeArray(Cost[] arr, String dir) throws FileNotFoundException, IOException {
 		if (statStatus) {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dir));
-			for (int i = 0; i < arr.length; i++) 
+			for (int i = 0; i < arr.length; i++)
 				out.writeObject(arr[i]);
 			out.flush();
 			out.close();
 		}
 	}
-	public Cost[] readStat(String dir) throws FileNotFoundException, IOException, ClassNotFoundException{
+
+	public Cost[] readStat(String dir) throws FileNotFoundException, IOException, ClassNotFoundException {
 		ObjectInputStream in = new ObjectInputStream(new FileInputStream(dir));
 		Cost arr[] = new Cost[365];
-		for(int i = 0;i<arr.length;i++)
+		for (int i = 0; i < arr.length; i++)
 			arr[i] = (Cost) in.readObject();
 		return arr;
-		
+
 	}
 }
-
