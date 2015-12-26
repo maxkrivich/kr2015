@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import static java.lang.Double.parseDouble;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -36,27 +37,21 @@ public class PrivatBank extends Bank {
 	@Override
 	public void update() {
 		try {
-			URLConnection con = new URL(apiLink).openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			StringBuffer sb = new StringBuffer();
-			int c;
-			while ((c = br.read()) != -1)
-				sb.append((char) c);
+			String fromStream = readFromUrl(apiLink);
 			JSONParser p = new JSONParser();
-			Object obj = JSONValue.parse(sb.toString());
+			Object obj = JSONValue.parse(fromStream);
 			JSONArray arr = (JSONArray) obj;
 			FileWriter file = new FileWriter(ARH_DIR);
 			file.write(arr.toJSONString());
 			file.flush();
 			file.close();
-
-			Iterator iter = arr.iterator();
+			Iterator<JSONObject> iter = arr.iterator();
 			int i = arr.size() - 1;
 			ccy = new HashMap<String, Cost>(i);
 			while (i-- > 0 && iter.hasNext()) {
-				JSONObject info = (JSONObject) iter.next();
-				ccy.put((String) info.get("ccy"), new Cost(Double.parseDouble((String) info.get("buy")),
-						Double.parseDouble((String) info.get("sale"))));
+				JSONObject info = iter.next();
+				ccy.put((String) info.get("ccy"),
+						new Cost(parseDouble((String) info.get("buy")), parseDouble((String) info.get("sale"))));
 			}
 			updateTime = new Date();
 		} catch (IOException e) {
@@ -64,19 +59,19 @@ public class PrivatBank extends Bank {
 			try {
 				Object obj = JSONValue.parse(new FileReader(ARH_DIR));
 				JSONArray arr = (JSONArray) obj;
-				Iterator iter = arr.iterator();
+				Iterator<JSONObject> iter = arr.iterator();
 				int i = arr.size() - 1;
 				ccy = new HashMap<String, Cost>(i);
 				while (i-- > 0 && iter.hasNext()) {
-					JSONObject info = (JSONObject) iter.next();
-					ccy.put((String) info.get("ccy"), new Cost(Double.parseDouble((String) info.get("buy")),
-							Double.parseDouble((String) info.get("sale"))));
+					JSONObject info = iter.next();
+					ccy.put((String) info.get("ccy"),
+							new Cost(parseDouble((String) info.get("buy")), parseDouble((String) info.get("sale"))));
 				}
-				updateTime = new Date(new File("src\\model\\privatjson.txt").lastModified());
+				updateTime = new Date(new File(ARH_DIR).lastModified());
 			} catch (FileNotFoundException e1) {
+				// new File(ARH_DIR).createNewFile();
 				e1.printStackTrace();
 			}
-			// e.printStackTrace();
 		}
 
 	}
@@ -87,26 +82,21 @@ public class PrivatBank extends Bank {
 		Cost ans[] = new Cost[dates.length];
 		long a = System.currentTimeMillis();
 		for (int i = 0; i < dates.length; i++) {
-			URLConnection con = new URL(arApiLink + dates[i]).openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			StringBuffer sb = new StringBuffer();
-			int c;
-			while ((c = br.read()) != -1)
-				sb.append((char) c);
+			String fromStream = readFromUrl(arApiLink + dates[i]);
 			JSONParser p = new JSONParser();
-			Object obj = JSONValue.parse(sb.toString());
+			Object obj = JSONValue.parse(fromStream);
 			JSONObject o = (JSONObject) obj;
 			JSONArray arr = (JSONArray) o.get("exchangeRate");
-			Iterator iter = arr.iterator();
+			Iterator<JSONObject> iter = arr.iterator();
 			while (iter.hasNext()) {
-				JSONObject info = (JSONObject) iter.next();
+				JSONObject info = iter.next();
 				if (ex.equals((String) info.get("currency"))) {
 					try {
 						ans[i] = new Cost((double) info.get("purchaseRate"), (double) info.get("saleRate"));
 					} catch (NullPointerException npe) {
 						continue;
 					}
-					System.out.printf("%d %s\n", i, ans[i]);
+					System.err.printf("%d %s\n", i, ans[i]);
 					break;
 				}
 			}
@@ -114,15 +104,28 @@ public class PrivatBank extends Bank {
 		}
 
 		long b = System.currentTimeMillis();
-		System.out.println(b - a);
+		System.err.println(b - a);
 		return ans;
 	}
 
-//	public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
-//		PrivatBank pb = new PrivatBank();
-//		//Cost arr[] = pb.readStat("statpb2014EUR.txt");
-//		pb.writeArray(pb.getStat("CAD"),"statpb2014CAD.txt");
-//		//System.out.println(arr[11]);
-//	}
+	private String readFromUrl(final String link) throws MalformedURLException, IOException {
+		URLConnection con = new URL(link).openConnection();
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		StringBuffer sb = new StringBuffer();
+		String ln;
+		while ((ln = br.readLine()) != null)
+			sb.append(ln);
+		br.close();
+		return sb.toString();
+
+	}
+
+	public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
+		PrivatBank pb = new PrivatBank();
+		pb.getStat("EUR");
+		// Cost arr[] = pb.readStat("statpb2014EUR.txt");
+		// pb.writeArray(pb.getStat("CAD"),"statpb2014CAD.txt");
+		// System.out.println(arr[11]);
+	}
 
 }

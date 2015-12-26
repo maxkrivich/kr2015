@@ -238,17 +238,6 @@ public class View extends JFrame {
 		}
 	}
 
-	// public static void main(final String[] args) throws
-	// FileNotFoundException, ClassNotFoundException, IOException {
-	// PrivatBank pb = new PrivatBank();
-	// Cost arr[] = pb.readStat("statpb2014EUR.txt");
-	// final Chart demo = new Chart("Chart", arr);
-	// demo.pack();
-	// RefineryUtilities.centerFrameOnScreen(demo);
-	// demo.setVisible(true);
-	//
-	// }
-
 }
 
 class ClockPane extends JPanel {
