@@ -22,6 +22,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
 public class PrivatBank extends Bank {
+	private final String ARH_DIR = "src\\model\\privatjson.txt";
 
 	public PrivatBank() {
 		bankName = "PrivatBank";
@@ -44,7 +45,7 @@ public class PrivatBank extends Bank {
 			JSONParser p = new JSONParser();
 			Object obj = JSONValue.parse(sb.toString());
 			JSONArray arr = (JSONArray) obj;
-			FileWriter file = new FileWriter("src\\model\\privatjson.txt");
+			FileWriter file = new FileWriter(ARH_DIR);
 			file.write(arr.toJSONString());
 			file.flush();
 			file.close();
@@ -61,7 +62,7 @@ public class PrivatBank extends Bank {
 		} catch (IOException e) {
 			JSONParser p = new JSONParser();
 			try {
-				Object obj = JSONValue.parse(new FileReader("src\\model\\privatjson.txt"));
+				Object obj = JSONValue.parse(new FileReader(ARH_DIR));
 				JSONArray arr = (JSONArray) obj;
 				Iterator iter = arr.iterator();
 				int i = arr.size() - 1;

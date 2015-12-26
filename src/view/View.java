@@ -51,6 +51,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import constants.My—onstants;
 import model.Cost;
 import model.Model;
 import model.PrivatBank;
@@ -72,12 +73,12 @@ public class View extends JFrame {
 	public View(Model model) {
 		super("CurrencyExchanger @maxkrivich");
 		try {
-			this.setIconImage(ImageIO.read(new File("ico.png")));
+			this.setIconImage(ImageIO.read(new File(My—onstants.ICO_DIR)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200,200, 550, 400);
+		setBounds(200, 200, 550, 400);
 		this.setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -172,7 +173,7 @@ public class View extends JFrame {
 			return Double.parseDouble(s);
 		else {
 			this.print("Wrong sum, please try again!\n");
-			return Double.POSITIVE_INFINITY;
+			return My—onstants.WRONG_INPUT_VIEW;
 		}
 	}
 
@@ -183,7 +184,7 @@ public class View extends JFrame {
 	public void setEnd(boolean b) {
 		stat.setEnabled(b);
 	}
-	
+
 	public void setUpEnd(boolean b) {
 		update.setEnabled(b);
 	}

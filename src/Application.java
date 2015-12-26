@@ -117,6 +117,7 @@ public class Application {/*extends JFrame implements ActionListener, KeyEventDi
 
 	public static void main(String[] args) throws ClassNotFoundException {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				Model m = new Model();
 				View v = new View(m);

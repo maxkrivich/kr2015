@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Admin/Desktop/java-mail-1.4.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Максим/Desktop/java-mail-1.4.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Admin/Desktop/jfreechart-1.0.19/jfreechart-1.0.19-demo.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Максим/Desktop/jfreechart-1.0.19/jfreechart-1.0.19-demo.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

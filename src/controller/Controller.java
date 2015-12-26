@@ -5,12 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.jfree.ui.RefineryUtilities;
 
+import constants.My—onstants;
 import model.Cost;
 import model.Model;
 import model.PrivatBank;
@@ -36,10 +38,14 @@ public class Controller {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			double sum = view.getSum();
-			if (sum == Double.POSITIVE_INFINITY)
+			if (sum == My—onstants.WRONG_INPUT_VIEW)
 				return;
 			String from = view.getFrom(), to = view.getTo();
 			double ans = model.getCalculation(sum, from, to);
+			if (ans == My—onstants.CALCULATION_ERR_MODEL) {
+				view.print("Try again!");
+				return;
+			}
 			view.appendSolution(sum, ans, from, to);
 		}
 	}
@@ -58,15 +64,12 @@ public class Controller {
 					cc[4] = model.getBank().readStat("statpb2014PLZ.txt");
 					cc[5] = model.getBank().readStat("statpb2014USD.txt");
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				EventQueue.invokeLater(new Runnable() {
+					@Override
 					public void run() {
-						ChartPB c = new ChartPB(model.getBank().getBankName() + " stat", cc);
-						c.pack();
-						RefineryUtilities.centerFrameOnScreen(c);
-						c.setVisible(true);
+						ChartPB c = new ChartPB(model.getBank().getBankName() + " statistics", cc);
 					}
 				});
 

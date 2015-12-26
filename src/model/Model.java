@@ -3,6 +3,8 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
+import constants.My—onstants;
+
 public class Model {
 	// private Bank[] banks = new Bank[] { new PrivatBank() }; // Banks array
 	private Map<String, Bank> banks = new HashMap<String, Bank>() {{
@@ -36,7 +38,7 @@ public class Model {
 		} else if (!b.getBaseCcy().equals(from) && !b.getBaseCcy().equals(to)) {
 			return Math.floor(((cnts * c1.getBuy()) / c2.getSale()) * 100) / 100;
 		}
-		return Double.NEGATIVE_INFINITY;
+		return My—onstants.CALCULATION_ERR_MODEL;
 	}
 
 	public String[] getBanksName() {
