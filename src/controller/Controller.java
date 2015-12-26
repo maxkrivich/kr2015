@@ -57,12 +57,12 @@ public class Controller {
 			if (model.getBank().getStatStatus() && model.getBank() instanceof PrivatBank) {
 				Cost[][] cc = new Cost[6][];
 				try {
-					cc[0] = model.getBank().readStat("statpb2014CAD.txt");
-					cc[1] = model.getBank().readStat("statpb2014CHF.txt");
-					cc[2] = model.getBank().readStat("statpb2014EUR.txt");
-					cc[3] = model.getBank().readStat("statpb2014GBP.txt");
-					cc[4] = model.getBank().readStat("statpb2014PLZ.txt");
-					cc[5] = model.getBank().readStat("statpb2014USD.txt");
+					cc[0] = model.getBank().readStat("files/statpb2014CAD.txt");
+					cc[1] = model.getBank().readStat("files/statpb2014CHF.txt");
+					cc[2] = model.getBank().readStat("files/statpb2014EUR.txt");
+					cc[3] = model.getBank().readStat("files/statpb2014GBP.txt");
+					cc[4] = model.getBank().readStat("files/statpb2014PLZ.txt");
+					cc[5] = model.getBank().readStat("files/statpb2014USD.txt");
 				} catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
 				}

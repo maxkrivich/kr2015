@@ -23,7 +23,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
 public class PrivatBank extends Bank {
-	private final String ARH_DIR = "src\\model\\privatjson.txt";
+	private final String ARH_DIR = "files/privatjson.txt";
 
 	public PrivatBank() {
 		bankName = "PrivatBank";
@@ -120,12 +120,12 @@ public class PrivatBank extends Bank {
 
 	}
 
-	public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
+	/*public static void main(String[] args) throws MalformedURLException, IOException, ClassNotFoundException {
 		PrivatBank pb = new PrivatBank();
 		pb.getStat("EUR");
 		// Cost arr[] = pb.readStat("statpb2014EUR.txt");
 		// pb.writeArray(pb.getStat("CAD"),"statpb2014CAD.txt");
 		// System.out.println(arr[11]);
-	}
+	}*/
 
 }

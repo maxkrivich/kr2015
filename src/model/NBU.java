@@ -20,6 +20,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
 public class NBU extends Bank {
+	private final String ARH_DIR = "files/nbujson.txt";
 
 	public NBU() {
 		bankName = "NBU";
@@ -40,7 +41,7 @@ public class NBU extends Bank {
 			JSONParser p = new JSONParser();
 			Object obj = JSONValue.parse(sb.toString());
 			JSONArray arr = (JSONArray) obj;
-			FileWriter file = new FileWriter("src\\model\\nbujson.txt");
+			FileWriter file = new FileWriter(ARH_DIR);
 			file.write(arr.toJSONString());
 			file.flush();
 			file.close();
@@ -59,7 +60,7 @@ public class NBU extends Bank {
 		} catch (IOException e) {
 			JSONParser p = new JSONParser();
 			try {
-				Object obj = JSONValue.parse(new FileReader("src\\model\\nbujson.txt"));
+				Object obj = JSONValue.parse(new FileReader(ARH_DIR));
 				JSONArray arr = (JSONArray) obj;
 				Iterator iter = arr.iterator();
 				int i = arr.size() - 1;
@@ -69,7 +70,7 @@ public class NBU extends Bank {
 					ccy.put((String) info.get("ccy"), new Cost(Double.parseDouble((String) info.get("buy")),
 							Double.parseDouble((String) info.get("sale"))));
 				}
-				updateTime = new Date(new File("src\\model\\nbujson.txt").lastModified());
+				updateTime = new Date(new File(ARH_DIR).lastModified());
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}
