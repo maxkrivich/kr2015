@@ -1,1 +1,1 @@
-[{"sale":"27.60000","base_ccy":"UAH","buy":"26.80000","ccy":"EUR"},{"sale":"0.37000","base_ccy":"UAH","buy":"0.35000","ccy":"RUR"},{"sale":"25.19000","base_ccy":"UAH","buy":"24.70000","ccy":"USD"},{"sale":"426.7988","base_ccy":"USD","buy":"386.1513","ccy":"BTC"}]
+[{"sale":"27.60000","base_ccy":"UAH","buy":"26.80000","ccy":"EUR"},{"sale":"0.37000","base_ccy":"UAH","buy":"0.35000","ccy":"RUR"},{"sale":"25.19000","base_ccy":"UAH","buy":"24.70000","ccy":"USD"},{"sale":"439.9112","base_ccy":"USD","buy":"398.0149","ccy":"BTC"}]
